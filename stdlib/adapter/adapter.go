@@ -11,7 +11,7 @@ type StandardLog struct {
 	prefix []interface{}
 }
 
-func NewStandardLog(logger *log.Logger) {
+func New(logger *log.Logger) {
 	return &StandardLog{
 		logger: logger,
 	}
