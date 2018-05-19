@@ -3,6 +3,8 @@ package adapter
 import (
 	"fmt"
 	"log"
+
+	"github.com/client9/ilog"
 )
 
 type StandardLog struct {
@@ -17,7 +19,7 @@ func New(logger *log.Logger) *StandardLog {
 	}
 }
 
-func (s *StandardLog) With(keyval ...interface{}) Logger {
+func (s *StandardLog) With(keyval ...interface{}) ilog.Logger {
 	news := StandardLog{
 		logger: s.logger,
 		level:  s.level,
