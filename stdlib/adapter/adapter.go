@@ -61,7 +61,7 @@ func (s *StandardLog) Error(msg string, keyval ...interface{}) {
 func quoted(value interface{}) string {
 	val := fmt.Sprintf("%v", value)
 	if !shouldQuote(val) {
-		return value
+		return val
 	}
 	return fmt.Sprintf("%q", val)
 }
