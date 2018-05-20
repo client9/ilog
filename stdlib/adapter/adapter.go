@@ -30,21 +30,22 @@ func (s *StandardLog) With(keyval ...interface{}) ilog.Logger {
 }
 
 func (s *StandardLog) log(level string, msg string, keyval ...interface{}) {
-	out := "level=" + quoted(level) + " msg=" + quoted(msg)
+	out := "level=" + quoted(level)
 	for i := 0; i < len(s.prefix); i += 2 {
 		key := s.prefix[i]
-		if key == "level" || key == "msg" {
+		if key == "level" {
 			continue
 		}
 		out += " " + quoted(key) + "=" + quoted(s.prefix[i+1])
 	}
 	for i := 0; i < len(keyval); i += 2 {
 		key := keyval[i]
-		if key == "level" || key == "msg" {
+		if key == "level" {
 			continue
 		}
 		out += " " + quoted(key) + "=" + quoted(keyval[i+1])
 	}
+	out += " msg=" + quoted(msg)
 	s.logger.Print(out)
 }
 
