@@ -30,13 +30,20 @@ func (s *StandardLog) With(keyval ...interface{}) ilog.Logger {
 }
 
 func (s *StandardLog) log(level string, msg string, keyval ...interface{}) {
-	out := ""
-	keyval = append([]interface{}{"level", level, "msg", msg}, keyval...)
+	out := "level=" + quoted(level) + " msg=" + quoted(msg)
 	for i := 0; i < len(s.prefix); i += 2 {
-		out += fmt.Sprintf("%s=%v ", s.prefix[i], s.prefix[i+1])
+		key := s.prefix[i]
+		if key == "level" || key == "msg" {
+			continue
+		}
+		out += " " + key + "=" + quoted(s.prefix[i+1])
 	}
 	for i := 0; i < len(keyval); i += 2 {
-		out += fmt.Sprintf("%s=%v ", keyval[i], keyval[i+1])
+		key := keyval[i]
+		if key == "level" || key == "msg" {
+			continue
+		}
+		out += " " + key + "=" + quoted(keyval[i+1])
 	}
 	s.logger.Print(out)
 }
@@ -49,4 +56,21 @@ func (s *StandardLog) Info(msg string, keyval ...interface{}) {
 }
 func (s *StandardLog) Error(msg string, keyval ...interface{}) {
 	s.log("error", msg, keyval...)
+}
+
+func quoted(value string) string {
+	if !shouldQuote(value) {
+		return value
+	}
+	return fmt.Sprintf("%v", value)
+}
+
+func shouldQuote(value string) bool {
+	for i := 0; i < len(value); i++ {
+		r := value[i]
+		if r <= ' ' || r == '=' || r == '"' || r == '\\' {
+			return true
+		}
+	}
+	return false
 }
