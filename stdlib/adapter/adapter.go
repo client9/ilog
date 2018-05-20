@@ -36,14 +36,14 @@ func (s *StandardLog) log(level string, msg string, keyval ...interface{}) {
 		if key == "level" || key == "msg" {
 			continue
 		}
-		out += " " + key + "=" + quoted(s.prefix[i+1])
+		out += " " + quoted(key) + "=" + quoted(s.prefix[i+1])
 	}
 	for i := 0; i < len(keyval); i += 2 {
 		key := keyval[i]
 		if key == "level" || key == "msg" {
 			continue
 		}
-		out += " " + key + "=" + quoted(keyval[i+1])
+		out += " " + quoted(key) + "=" + quoted(keyval[i+1])
 	}
 	s.logger.Print(out)
 }
@@ -58,11 +58,12 @@ func (s *StandardLog) Error(msg string, keyval ...interface{}) {
 	s.log("error", msg, keyval...)
 }
 
-func quoted(value string) string {
-	if !shouldQuote(value) {
+func quoted(value interface{}) string {
+	val := fmt.Sprintf("%v", value)
+	if !shouldQuote(val) {
 		return value
 	}
-	return fmt.Sprintf("%v", value)
+	return fmt.Sprintf("%q", val)
 }
 
 func shouldQuote(value string) bool {
