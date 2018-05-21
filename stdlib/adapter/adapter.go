@@ -45,7 +45,9 @@ func (s *StandardLog) log(level string, msg string, keyval ...interface{}) {
 		}
 		out += " " + quoted(key) + "=" + quoted(keyval[i+1])
 	}
-	out += " msg=" + quoted(msg)
+	if msg != "" {
+		out += " msg=" + quoted(msg)
+	}
 	s.logger.Print(out)
 }
 
@@ -68,6 +70,9 @@ func quoted(value interface{}) string {
 }
 
 func shouldQuote(value string) bool {
+	if len(value) == 0 {
+		return true
+	}
 	for i := 0; i < len(value); i++ {
 		r := value[i]
 		if r <= ' ' || r == '=' || r == '"' || r == '\\' {
